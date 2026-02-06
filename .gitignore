@@ -1,0 +1,39 @@
+downloads/.
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+*.whl
+pip-wheel-metadata/
+build/
+dist/
+.eggs/
+develop-eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+*.log
+*.sqlite3
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
