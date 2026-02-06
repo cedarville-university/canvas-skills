@@ -26,8 +26,7 @@ After installation, restart Codex to pick up the new skill.
 
 ## Setup
 
-Create a `.env` file in the skill folder (`~/.codex/skills/canvas-tools/.env`) or
-export environment variables:
+Create a `.env` file in your working folder (for example, `~/user/documents/.env`) 
 
 ```
 CANVAS_BASE_URL=https://your.canvas.instance
