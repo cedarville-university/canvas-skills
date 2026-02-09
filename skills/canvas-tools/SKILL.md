@@ -17,7 +17,19 @@ Use `canvasapi` to read and update Canvas data and perform Canvas actions using 
 
 ## General Workflow For Any Canvas Task
 
+1. Identify the Canvas object and action first (course, assignment, submission, enrollment, user, file).
+2. Resolve required IDs before calling write operations.
+3. Use `canvasapi` methods instead of direct HTTP calls.
+4. Ask for explicit confirmation before write actions.
+5. For any created or downloaded files, create and use a temp folder first.
 
+## Temporary File Handling
+
+- If a task creates or downloads files, create a temp folder and store all artifacts there.
+- Prefer a deterministic path under `/tmp`, for example: `/tmp/canvas-tools/<course_id>/<assignment_id>/`.
+- If IDs are not available, use a timestamped temp folder name.
+- Report the temp folder path in the output so files are easy to find.
+- Keep all intermediate files in that temp folder.
 
 ## Tasks
 
@@ -77,15 +89,19 @@ for assignment in course.get_assignments():
 
 - Use course + assignment IDs to list submissions.
 - For each submission, collect attachments and download them.
-- Save files to a user-specified output directory.
+- Create a temp folder and save files there.
 
 ```python
+from pathlib import Path
+
 course = canvas.get_course(course_id)
 assignment = course.get_assignment(assignment_id)
 submissions = assignment.get_submissions()
+output_dir = Path(f"/tmp/canvas-tools/{course_id}/{assignment_id}")
+output_dir.mkdir(parents=True, exist_ok=True)
 for submission in submissions:
     for attachment in submission.attachments or []:
-        attachment.download("/path/to/output")
+        attachment.download(str(output_dir / attachment.filename))
 ```
 
 ### Submit Grades And Comments

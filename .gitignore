@@ -1,4 +1,5 @@
 downloads/.
+temp/
 
 # Python
 __pycache__/
@@ -37,3 +38,4 @@ env/
 
 # OS
 .DS_Store
+.env
