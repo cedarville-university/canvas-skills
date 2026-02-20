@@ -1,4 +1,4 @@
 interface:
   display_name: "Canvas Tools"
   short_description: "Help with Canvas Tools tasks"
-  default_prompt: "Use canvasapi with CANVAS_BASE_URL and CANVAS_API_TOKEN from .env to perform any Canvas LMS task. Prefer canvasapi methods for courses, assignments, submissions, enrollments, users, grading, and files. Ask for confirmation before write actions."
+  default_prompt: "Use canvasapi with CANVAS_BASE_URL and CANVAS_API_TOKEN from .env to perform Canvas LMS tasks. Prefer canvasapi methods for courses, assignments, submissions, enrollments, users, grading, and files. For CAG course builds, use scripts/extract_cag_to_build_request.py in --mode auto to convert DOCX into buildRequest JSON with LLM fallback. Ask for confirmation before write actions."

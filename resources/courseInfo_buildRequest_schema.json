@@ -1,0 +1,121 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseBuildInfo",
+  "type": "object",
+  "properties": {
+    "course_id": { "type": "integer" },
+    "start_date": { "type": "string", "format": "date-time" },
+    "end_date": { "type": "string", "format": "date-time" },
+    "default_due_day": { "type": "integer" },
+    "default_discussion_due_day": { "type": "integer" },
+    "default_last_day": { "type": "integer" },
+    "build_type": { "type": "integer" },
+    "overview_page_template": { "type": "string" },
+    "discussion_template": { "type": "string" },
+    "assignment_template": { "type": "string" },
+    "newquiz_template": { "type": "string" },
+    "classicquiz_template": { "type": "string" },
+    "course": {
+      "type": "object",
+      "properties": {
+        "course_code": { "type": "string" },
+        "course_name": { "type": "string" },
+        "description": { "type": "string" },
+        "instructor": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "email": { "type": "string" }
+            },
+            "required": ["name", "email"]
+          }
+        },
+        "year": { "type": "integer" },
+        "term": { "type": "string" },
+        "start_at": { "type": "string", "format": "date" },
+        "end_at": { "type": "string", "format": "date" },
+        "credits": { "type": "integer" },
+        "objectives": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "textbooks": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "course_policy": { "type": "string" },
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "name": { "type": "string" },
+              "number": { "type": "integer" },
+              "position": { "type": "integer" },
+              "overview": { "type": "string" },
+              "objectives": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "assessments": {
+                "type": "array",
+                "items": { "type": "object" }
+              },
+              "assignments": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": ["string", "integer"] },
+                    "name": { "type": "string" },
+                    "type": { "type": "string" }
+                  },
+                  "required": ["id", "name", "type"]
+                }
+              },
+              "content": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "pages": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": ["string", "integer"] },
+                    "title": { "type": "string" }
+                  },
+                  "required": ["id", "title"]
+                }
+              },
+              "files": {
+                "type": "array",
+                "items": { "type": "object" }
+              }
+            },
+            "required": ["id", "name", "number", "position", "overview", "objectives", "assessments", "assignments", "content", "pages", "files"]
+          }
+        }
+      },
+      "required": ["course_code", "course_name", "description", "instructor", "year", "term", "start_at", "end_at", "credits", "objectives", "textbooks", "course_policy", "modules"]
+    }
+  },
+  "required": [
+    "course_id",
+    "start_date",
+    "end_date",
+    "default_due_day",
+    "default_discussion_due_day",
+    "default_last_day",
+    "build_type",
+    "overview_page_template",
+    "discussion_template",
+    "assignment_template",
+    "newquiz_template",
+    "classicquiz_template",
+    "course"
+  ]
+}

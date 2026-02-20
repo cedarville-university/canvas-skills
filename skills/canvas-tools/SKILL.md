@@ -7,7 +7,8 @@ description: Use when working with Canvas LMS via the Python `canvasapi` library
 
 ## Overview
 
-Use `canvasapi` to read and update Canvas data and perform Canvas actions using IDs provided by the user.
+Use `canvasapi` to read and update Canvas data and perform Canvas actions using IDs provided by the user.  
+For Course Alignment Grid workflows, use the bundled parser script to convert CAG `.docx` files into build request JSON.
 
 ## Quick Start
 
@@ -130,6 +131,39 @@ course = canvas.get_course(course_id)
 course.publish()
 ```
 
+### Parse CAG DOCX To Canvas Build Request JSON
+
+- Use `scripts/extract_cag_to_build_request.py` when the user provides a CAG Word document and needs build payload JSON.
+- Use `--mode auto` (default) to parse with deterministic rules first, then fall back to OpenAI parsing for non-standard table layouts.
+- Interactive prompting is enabled by default to fill missing values (for example `start_at`, `end_at`, `textbooks`, `course_policy`, and `course_id`) before output.
+- Use `--no-interactive` when you need non-interactive batch output.
+- The script reads course metadata, objectives, and the module table (4 or 5 columns).
+- It maps assessments to assignment types (`quiz`, `classic quiz`, `discussion`, `assignment`), handles `(new_page)`, and supports `file:<id>` links.
+- If an assessment item already includes an explicit assignment id marker (`id:123`, `id=q7`, `(id:a2)`, `[id:q3]`), the script preserves it instead of generating a new id.
+- It outputs full `buildRequest` JSON with course data nested under `course`.
+- Validate output with the provided schema when available.
+
+```bash
+python3 scripts/extract_cag_to_build_request.py \
+  --input-docx /path/to/cag.docx \
+  --output-json /tmp/build_request.json \
+  --schema /path/to/courseInfo_buildRequest_schema.json \
+  --course-id 12345 \
+  --mode auto
+```
+
+- For custom extraction behavior, pass instruction markdown:
+
+```bash
+python3 scripts/extract_cag_to_build_request.py \
+  --input-docx /path/to/cag.docx \
+  --output-json /tmp/build_request.json \
+  --schema /path/to/courseInfo_buildRequest_schema.json \
+  --course-id 12345 \
+  --mode llm \
+  --instructions /path/to/custom-gpt-instruction.md
+```
+
 ## Pagination
 
 `canvasapi` returns paginated iterators. Always iterate the result set rather than assuming one page.
@@ -160,4 +194,5 @@ course.publish()
 - `references/submissions.md` for submission download and grading patterns.
 - `references/auth.md` for `.env` configuration and OAuth migration notes.
 - `references/setup.md` for local `.env` setup instructions.
-- `scripts/smoke_test.py` for a quick config check and sample course listing.
+- `references/cag-build-request.md` for CAG-to-build JSON mapping rules.
+- `scripts/extract_cag_to_build_request.py` for deterministic CAG DOCX parsing.
