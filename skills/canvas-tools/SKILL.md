@@ -134,6 +134,9 @@ course.publish()
 ### Parse CAG DOCX To Canvas Build Request JSON
 
 - Use `scripts/extract_cag_to_build_request.py` when the user provides a CAG Word document and needs build payload JSON.
+- Before extraction, apply normalization rules from:
+- `references/cag-course-build-workflow.md`
+- `references/cag-assessment-resource-handling.md`
 - Use `--mode auto` (default) to parse with deterministic rules first, then fall back to OpenAI parsing for non-standard table layouts.
 - Interactive prompting is enabled by default to fill missing values (for example `start_at`, `end_at`, `textbooks`, `course_policy`, and `course_id`) before output.
 - Use `--no-interactive` when you need non-interactive batch output.
@@ -162,6 +165,30 @@ python3 scripts/extract_cag_to_build_request.py \
   --course-id 12345 \
   --mode llm \
   --instructions /path/to/custom-gpt-instruction.md
+```
+
+### Build Course From buildRequest JSON
+
+- Use `scripts/build_course_from_request.py` to run a full builder workflow using only `canvasapi` methods.
+- Input must be a full `buildRequest` JSON body with `course` and `course.modules`.
+- Supports both build modes:
+- `build_type=1`: map existing published assignments into module assessments by due-week.
+- `build_type=2`: upsert/create assignments, discussions, new quizzes, and classic quizzes; update syllabus; create modules/pages/module-items.
+- Writes artifacts to `/tmp/canvas-tools/builder` by default:
+- `<course_id>_modules_v4.json` and `<course_id>_built_v4.json`.
+- For write actions, require explicit user confirmation in-session and pass `--confirm-write`.
+- Use `--dry-run` to validate payload and templates without mutating Canvas.
+
+```bash
+python3 scripts/build_course_from_request.py \
+  --input-json /tmp/build_request.json \
+  --confirm-write
+```
+
+```bash
+python3 scripts/build_course_from_request.py \
+  --input-json /tmp/build_request.json \
+  --dry-run
 ```
 
 ## Pagination
@@ -195,4 +222,7 @@ python3 scripts/extract_cag_to_build_request.py \
 - `references/auth.md` for `.env` configuration and OAuth migration notes.
 - `references/setup.md` for local `.env` setup instructions.
 - `references/cag-build-request.md` for CAG-to-build JSON mapping rules.
+- `references/cag-course-build-workflow.md` for generalized end-to-end CAG cleanup/build workflow.
+- `references/cag-assessment-resource-handling.md` for generalized assessment/resources column handling rules.
 - `scripts/extract_cag_to_build_request.py` for deterministic CAG DOCX parsing.
+- `scripts/build_course_from_request.py` for `canvasapi`-based builder execution from buildRequest JSON.

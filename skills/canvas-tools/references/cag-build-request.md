@@ -76,7 +76,18 @@ python3 scripts/extract_cag_to_build_request.py \
 - `--api-key-env` selects the API-key environment variable (default `OPENAI_API_KEY`).
 - `--interactive` / `--no-interactive` toggles prompting for missing fields like dates, textbooks, policy, and course id.
 
-## Post-JSON Step: Canvas Assignment ID Reconciliation
+## Operational Build Workflow
+
+Use this sequence after JSON generation.
+
+### 1) Post-Process Build JSON
+
+- Verify course metadata: code, name, description, credits, year, term, `start_at`, `end_at`, textbooks.
+- Verify objectives list contains only intended objective items.
+- Verify module names, objectives, assessments, and resources.
+- Verify assessment type mapping (`discussion`, `assignment`, `quiz`, `classic quiz`).
+
+### 2) Canvas Assignment ID Reconciliation
 
 After generating JSON, reconcile assignment IDs against the target Canvas course:
 
@@ -87,6 +98,37 @@ After generating JSON, reconcile assignment IDs against the target Canvas course
 5. If not found, keep the existing CAG assignment ID.
 6. Keep assignment `name` and `type` unchanged while reconciling IDs.
 7. If one CAG assignment text represents multiple Canvas assignments, split into multiple assignment objects so each object has one Canvas ID.
+
+### 3) Preflight Before Build
+
+- Confirm server target (production vs beta) matches intent.
+- Confirm templates exist in the target course.
+- Confirm JSON has unique assignment IDs and valid types.
+- Confirm required permissions and token scope.
+
+### 4) Build
+
+- Run builder (`builder_build` or `scripts/build_course_from_request.py`).
+- Capture status, message, and course URL.
+
+### 5) Verify Post-Build
+
+- Verify modules created and ordered correctly.
+- Verify assessments linked into expected modules.
+- Verify critical items (tests/final/capstone/discussion templates).
+
+### 6) Recover If Needed
+
+- Run cleanup (`builder_cleanbuild`) if build output is incorrect.
+- Fix source JSON or template/settings issues.
+- Re-run build and verify again.
+
+### 7) Archive Artifacts
+
+- Cleaned CAG `.docx`/`.md`
+- Final build JSON
+- ID reconciliation notes
+- Build/clean output logs
 
 ## LLM Requirements
 

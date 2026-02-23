@@ -33,6 +33,21 @@ CANVAS_API_TOKEN=your_token
 
 See `SKILL.md` for workflow rules and `references/canvasapi.md` for common examples.
 
+Builder workflow script:
+
+```bash
+python3 scripts/build_course_from_request.py \
+  --input-json /tmp/build_request.json \
+  --dry-run
+```
+
+For non-dry-run execution, pass `--confirm-write`.
+
+## CAG Workflow References
+
+- `references/cag-course-build-workflow.md` - generalized end-to-end CAG cleanup/build workflow.
+- `references/cag-assessment-resource-handling.md` - generalized handling rules for assessment and resources columns.
+
 ## Safety
 
 Write actions (publishing, grading, updates) require explicit confirmation.
