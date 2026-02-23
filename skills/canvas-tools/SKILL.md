@@ -191,6 +191,14 @@ python3 scripts/build_course_from_request.py \
   --dry-run
 ```
 
+### Convert Rubric Text To Canvas Import CSV
+
+- Use `references/rubric-to-canvas-csv-workflow.md` for the complete conversion procedure.
+- Start from `resources/rubric_import_template.csv` and keep header order unchanged.
+- Prefer one CSV per rubric for safer Canvas import and easier rollback.
+- Keep points numeric and include `No Marks` (`0`) when course policy expects a zero-level option.
+- After generating CSV, validate column count consistency and point totals before import.
+
 ## Pagination
 
 `canvasapi` returns paginated iterators. Always iterate the result set rather than assuming one page.
