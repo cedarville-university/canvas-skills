@@ -20,6 +20,8 @@ Use this workflow for any course build generated from a CAG document.
 - Move prompts/import/setup notes into an assessment-details section.
 - Apply detailed assessment/resources rules from
   `references/cag-assessment-resource-handling.md`.
+- If the course is being compressed/expanded (for example, 14 modules to 8 modules), run proposal planning from
+  `references/course-conversion-proposal-workflow.md` before build execution.
 
 ## 3) Run CAG Build Phase
 

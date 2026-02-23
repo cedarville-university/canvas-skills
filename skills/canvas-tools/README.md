@@ -47,6 +47,7 @@ For non-dry-run execution, pass `--confirm-write`.
 
 - `references/cag-course-build-workflow.md` - generalized end-to-end CAG cleanup/build workflow.
 - `references/cag-assessment-resource-handling.md` - generalized handling rules for assessment and resources columns.
+- `references/course-conversion-proposal-workflow.md` - planning workflow for converting an existing course to a new module count with workload balancing.
 
 ## Safety
 
