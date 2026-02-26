@@ -131,6 +131,43 @@ course = canvas.get_course(course_id)
 course.publish()
 ```
 
+### Manage Course Favorites (Dashboard Cards)
+
+- Favorites are user-specific and must be set as the user (for example with `as_user_id` when an admin token can masquerade).
+- Canvas has two dashboard behaviors:
+- If a user has **no explicit favorites**, Canvas shows an auto-generated enrolled-course list.
+- Once you add any favorite, Canvas switches to **explicit favorites mode** and dashboard cards come from that explicit list.
+- **Important safety rule:** Never bulk-add a single favorite course without a pre-check. For users with no explicit favorites, this can unintentionally narrow dashboard cards to one course.
+
+Safe patterns:
+- Preferred for broad visibility: do not set favorites globally; ask users to star courses themselves.
+- If you must add a required favorite and preserve visible cards:
+- Read current favorites first (`get_favorite_courses`).
+- If the user has no explicit favorites, promote currently returned courses into explicit favorites, then add the required course.
+- If the user already has explicit favorites, add the required course only.
+
+Rollback/repair patterns:
+- Reset a user's explicit favorites to default auto-generated cards:
+- `current_user.reset_favorite_courses(as_user_id=user_id)`
+- Remove one course from favorites for a user:
+- `DELETE /api/v1/users/self/favorites/courses/:id` (via `canvasapi.favorite.Favorite.remove(as_user_id=user_id)`)
+
+```python
+from canvasapi.favorite import Favorite
+
+current_user = canvas.get_current_user()
+
+# Add favorite course as a user (masquerade).
+current_user.add_favorite_course(course_id, as_user_id=user_id)
+
+# Reset user favorites to Canvas default generated list.
+current_user.reset_favorite_courses(as_user_id=user_id)
+
+# Remove one favorite course for a user.
+fav = Favorite(current_user._requester, {"context_type": "Course", "context_id": course_id})
+fav.remove(as_user_id=user_id)
+```
+
 ### Parse CAG DOCX To Canvas Build Request JSON
 
 - Use `scripts/extract_cag_to_build_request.py` when the user provides a CAG Word document and needs build payload JSON.
@@ -165,30 +202,6 @@ python3 scripts/extract_cag_to_build_request.py \
   --course-id 12345 \
   --mode llm \
   --instructions /path/to/custom-gpt-instruction.md
-```
-
-### Build Course From buildRequest JSON
-
-- Use `scripts/build_course_from_request.py` to run a full builder workflow using only `canvasapi` methods.
-- Input must be a full `buildRequest` JSON body with `course` and `course.modules`.
-- Supports both build modes:
-- `build_type=1`: map existing published assignments into module assessments by due-week.
-- `build_type=2`: upsert/create assignments, discussions, new quizzes, and classic quizzes; update syllabus; create modules/pages/module-items.
-- Writes artifacts to `/tmp/canvas-tools/builder` by default:
-- `<course_id>_modules_v4.json` and `<course_id>_built_v4.json`.
-- For write actions, require explicit user confirmation in-session and pass `--confirm-write`.
-- Use `--dry-run` to validate payload and templates without mutating Canvas.
-
-```bash
-python3 scripts/build_course_from_request.py \
-  --input-json /tmp/build_request.json \
-  --confirm-write
-```
-
-```bash
-python3 scripts/build_course_from_request.py \
-  --input-json /tmp/build_request.json \
-  --dry-run
 ```
 
 ### Convert Rubric Text To Canvas Import CSV
@@ -233,4 +246,3 @@ python3 scripts/build_course_from_request.py \
 - `references/cag-course-build-workflow.md` for generalized end-to-end CAG cleanup/build workflow.
 - `references/cag-assessment-resource-handling.md` for generalized assessment/resources column handling rules.
 - `scripts/extract_cag_to_build_request.py` for deterministic CAG DOCX parsing.
-- `scripts/build_course_from_request.py` for `canvasapi`-based builder execution from buildRequest JSON.
