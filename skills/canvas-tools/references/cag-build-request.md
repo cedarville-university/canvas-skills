@@ -108,7 +108,7 @@ After generating JSON, reconcile assignment IDs against the target Canvas course
 
 ### 4) Build
 
-- Run builder (`builder_build` or `scripts/build_course_from_request.py`).
+- Run builder via MCP tool: `builder_build`.
 - Capture status, message, and course URL.
 
 ### 5) Verify Post-Build
@@ -119,7 +119,7 @@ After generating JSON, reconcile assignment IDs against the target Canvas course
 
 ### 6) Recover If Needed
 
-- Run cleanup (`builder_cleanbuild`) if build output is incorrect.
+- Run cleanup via MCP tool: `builder_cleanbuild` if build output is incorrect.
 - Fix source JSON or template/settings issues.
 - Re-run build and verify again.
 
