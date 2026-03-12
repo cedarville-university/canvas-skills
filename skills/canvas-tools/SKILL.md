@@ -21,8 +21,19 @@ For Course Alignment Grid workflows, use the bundled parser script to convert CA
 1. Identify the Canvas object and action first (course, assignment, submission, enrollment, user, file).
 2. Resolve required IDs before calling write operations.
 3. Use `canvasapi` methods instead of direct HTTP calls.
-4. Ask for explicit confirmation before write actions.
-5. For any created or downloaded files, create and use a temp folder first.
+4. Draft a rollback plan before any write action (what will change, how to revert it, and what IDs to use for rollback).
+5. Ask for explicit confirmation before write actions.
+6. For any created or downloaded files, create and use a temp folder first.
+
+## Rollback Planning
+
+- Before writing anything in Canvas, create a rollback plan first.
+- Include these items in the plan:
+- Changed object IDs (course, assignment, submission, enrollment, module item, favorite, etc.).
+- Previous values that might need to be restored (for example prior grade, prior comment, prior publish state, prior favorites list).
+- Exact revert action (API call/method and required parameters).
+- If rollback data is not available, collect it first before applying the write.
+- Report the rollback plan summary before execution.
 
 ## Temporary File Handling
 
@@ -233,6 +244,7 @@ python3 scripts/extract_cag_to_build_request.py \
 
 ## Safety
 
+- Never perform a write action without a rollback plan prepared first.
 - Never call `publish()` without explicit user confirmation in the same session.
 - Never submit grades or comments without explicit user confirmation in the same session.
 
