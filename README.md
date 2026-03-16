@@ -17,6 +17,8 @@ If your Codex home is different, replace `~/.codex` with your `CODEX_HOME`.
 
 If you want to install directly from GitHub using the Codex skill installer:
 
+Use `$skill-installer` to install the Codex skill from GitHub repo `https://github.com/cedarville-university/canvas-skills.git`.
+
 ```bash
 python ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py   --repo <owner>/<repo>   --path skills/canvas-tools
 ```
